@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details</title>
+    <!-- Add Bootstrap or your CSS framework -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Service Details</h2>
+
+        <!-- Service details section -->
+        <div class="card">
+            <div class="card-header">
+                <h4>{{ service.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Description:</strong> {{ service.description }}</p>
+                <p><strong>Price:</strong> ${{ service.price }}</p>
+                <p><strong>Ratings:</strong> {{ service.rating if service.rating else 'Not rated yet' }}</p>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <!-- Check if the user is logged in and then show the rate button -->
+            {% if session.get('username') %}
+                <a href="{{ url_for('rate_service', service_id=service.id) }}" class="btn btn-warning btn-sm">Rate this Service</a>
+            {% else %}
+                <p>Please log in to rate this service.</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            {% for service in services %}
+                <div class="service">
+                    <h3>{{ service.name }}</h3>
+                    <p>{{ service.description }}</p>
+                    <!-- Add a form to rate the service -->
+                    <form action="{{ url_for('rate_service', service_id=service.id) }}" method="POST">
+                        <button type="submit" class="btn btn-primary">Rate Service</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- Optional: Add JavaScript libraries like jQuery, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

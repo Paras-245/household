@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-link {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .toggle-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    <div class="flashes">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+    <div class="container mt-5">
+        <div class="form-container">
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h3 class="form-title">Login</h3>
+                <form action="/login" method="POST">
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="loginUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <a class="toggle-link" id="showSignup">Don't have an account? Signup</a>
+                </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <h3 class="form-title">Signup</h3>
+                <form action="/signup" method="POST">
+                    <div class="mb-3">
+                        <label for="signupUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="signupUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="signupName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="signupEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="signupPassword" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                    </div>
+                    <!-- Role selection (Customer or Professional) -->
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">Select Role</label>
+                        <select class="form-control" id="userRole" name="role" required>
+                            <option value="customer">Customer</option>
+                            <option value="professional">Professional</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Signup</button>
+                    <a class="toggle-link" id="showLogin">Already have an account? Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript to toggle forms -->
+    <script>
+        // Get the elements for toggling
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const showSignupLink = document.getElementById('showSignup');
+        const showLoginLink = document.getElementById('showLogin');
+    
+        // Initially hide the signup form and show the login form on page load
+        signupForm.style.display = 'none';  // Hide signup form initially
+        loginForm.style.display = 'block';  // Show login form initially
+    
+        // Show Signup form when user clicks on 'Don't have an account? Signup'
+        showSignupLink.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default action of link (optional)
+            loginForm.style.display = 'none';  // Hide login form
+            signupForm.style.display = 'block';  // Show signup form
+        });
+    
+        // Show Login form when user clicks on 'Already have an account? Login'
+        showLoginLink.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default action of link (optional)
+            signupForm.style.display = 'none';  // Hide signup form
+            loginForm.style.display = 'block';  // Show login form
+        });
+    </script>
+
+</body>
+
+</html>

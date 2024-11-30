@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <hr>
+    
+    <!-- Profile Overview -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Profile Overview</h5>
+                </div>
+                <div class="card-body">
+                    <img src="{{ user.profile_picture or '/static/image.png' }}" alt="Profile Picture" class="profile-picture mb-2">
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <a href="{{ url_for('edit_profile') }}" class="btn btn-info btn-sm">Edit Profile</a>
+                    <a href="{{ url_for('change_password') }}" class="btn btn-warning btn-sm">Change Password</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service History -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Service History</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Upcoming Services -->
+                    <h6>Upcoming Services</h6>
+                    {% if upcoming_services %}
+                        <ul class="list-group">
+                            {% for booking in upcoming_services %}
+                                <li class="list-group-item">
+                                    <strong>{{ booking.service.name }}</strong> - {{ booking.date_of_booking }} <br>
+                                    <span>Status: {{ booking.booking_status }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming services.</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <!-- Past Services -->
+                    <h6>Past Services</h6>
+                    {% if past_services %}
+                        <ul class="list-group">
+                            {% for booking in past_services %}
+                                <li class="list-group-item">
+                                    <strong>{{ booking.service.name }}</strong> - {{ booking.date_of_completion }} <br>
+                                    <p>Feedback: {{ booking.feedback }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No past services.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ratings & Reviews -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Your Ratings & Reviews</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Your Previous Reviews</h6>
+                    {% if reviews %}
+                        <ul class="list-group">
+                            {% for review in reviews %}
+                                <li class="list-group-item">
+                                    <strong>{{ review.provider.name }}</strong> <br>
+                                    Rating: {{ review.rating }} <br>
+                                    Feedback: {{ review.comments }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>You have not left any reviews yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Choose Service -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Choose a Service</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('choose_service') }}" method="POST">
+                        <div class="form-group">
+                            <label for="service">Select Service:</label>
+                            <select name="service_id" id="service" class="form-control" required>
+                                <option value="" disabled selected>Select a service</option>
+                                {% if services %}
+                                    {% for service in services %}
+                                        <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option disabled>No services available</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="professional">Select Professional:</label>
+                            <select name="professional_id" id="professional" class="form-control" required>
+                                <option value="" disabled selected>Select a professional</option>
+                                {% for professional in professionals %}
+                                    <option value="{{ professional.id }}">{{ professional.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

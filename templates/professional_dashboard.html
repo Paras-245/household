@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}Professional Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <hr>
+
+    <!-- Profile Overview -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Profile Overview</h5>
+                </div>
+                <div class="card-body">
+                    <img src="{{ user.profile_picture or '/static/image.png' }}" alt="Profile Picture" class="profile-picture mb-2">
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Service Type:</strong> {{ user.service_type }}</p>
+                    <p><strong>Experience:</strong> {{ user.experience }} years</p>
+                    <a href="{{ url_for('edit_profile') }}" class="btn btn-info btn-sm">Edit Profile</a>
+                    <a href="{{ url_for('change_password') }}" class="btn btn-warning btn-sm">Change Password</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Bookings</h5>
+                </div>
+                <div class="card-body">
+                    {% if chosen_bookings %}
+                        <ul class="list-group">
+                            {% for booking in chosen_bookings %}
+                                <li class="list-group-item">
+                                    <strong>{{ booking.service.name }}</strong> - {{ booking.date_of_booking }} <br>
+                                    <span>Status: {{ booking.booking_status }}</span>
+                                    <form action="{{ url_for('booking_action', booking_id=booking.id) }}" method="POST" class="mt-2">
+                                        <button type="submit" name="action" value="complete" class="btn btn-primary btn-sm">Mark as Completed</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No bookings available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Booking History -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Booking History</h5>
+                </div>
+                <div class="card-body">
+                    {% if completed_bookings %}
+                        <ul class="list-group">
+                            {% for booking in completed_bookings %}
+                                <li class="list-group-item">
+                                    <strong>{{ booking.service.name }}</strong> - {{ booking.date_of_booking }} <br>
+                                    <span>Status: {{ booking.booking_status }}</span>
+                                    <span>Completed on: {{ booking.date_of_completion }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No completed bookings available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
